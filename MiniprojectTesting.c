@@ -3,10 +3,8 @@
 #include <intrins.h>
 #include <math.h>
 #define data_line P2
-#define SpeedofSound 34300 //cm/s
-#define s_to_us pow(10, -6)
-#define periodcycle 1.085*(s_to_us)
-#define speed_in_us SpeedofSound*s_to_us //cm per microseconds
+#define SpeedofSound 0.034 //cm/us
+#define periodcycle 1.085
 #define PWM_Period 18433
 #define onems 922
 
@@ -23,7 +21,7 @@ float distance1, duration1, distance2, duration2;		                        //Ult
 unsigned int cycle1, cycle2;										    		//Ultrasonic sensors parameters
 unsigned int ON_Period, OFF_Period;  							               	//Servo Motor Parameters
 char angle_write, i, angle_inc;						                //Servo Motor Parameters
-code unsigned char dist1[20], dist2[20];
+
 void trigdelay();																//Ultrasonic trigger pulse delay
 
 void sendtriggerpulse();														//Send 10us trigger pulse
@@ -40,6 +38,7 @@ void delay(unsigned int);
 
 
 void main() {
+	code unsigned char dist1[20], dist2[20];
 	trig1 = trig2 = echo1 = echo2 = RS = RW = EN = servo = 0;
 	angle_inc = 1;
 	TMOD = 0x01;
@@ -58,7 +57,7 @@ void main() {
 	
     rotate(angle_write);
 		
-
+		delay(500);
 		sendtriggerpulse();
 		while (!echo1);
 		TR0 = 1;
@@ -72,13 +71,11 @@ void main() {
 		while (echo2 && !TF0);
     TR0 = 0;
     TF0 = 0;
-
-
-    cycle2 = TL0 | (TH0 << 8);
+    cycle2 = (TL0 | (TH0 << 8));
     duration1 = cycle1*periodcycle;
     duration2 = cycle2*periodcycle;
-    distance1 = (duration1*speed_in_us)/2;
-    distance2 = (duration2*speed_in_us)/2;
+    distance1 = (duration1*SpeedofSound)/2.0;
+    distance2 = (duration2*SpeedofSound)/2.0;
 
     if (distance1 <= 20.0) {
 			angle_inc = 1;
@@ -88,8 +85,8 @@ void main() {
     }
 
 
-		sprintf(dist1, "Dist_1: %.2f ", distance1);
-    sprintf(dist2, "Dist_2: %.2f ", distance2);
+		sprintf(dist1, "Dist_1: %.2f cm", distance1);
+    sprintf(dist2, "Dist_2: %.2f cm", distance2);
 		cmd(0x01);
 		delay(500);
 		cmd(0x80);
@@ -199,3 +196,4 @@ void delay(unsigned int a) {
 		TL0 = onems;
 	}
 }
+
