@@ -35,7 +35,7 @@ void lcd_delay();
 void cmd(unsigned char);
 void lcd_init();
 void dat(unsigned char);
-void show(unsigned char*);
+void LCD_String(unsigned char*);
 void delay(unsigned int);
 
 
@@ -94,9 +94,9 @@ void main() {
 		cmd(0x01);
 		delay(500);
 		cmd(0x80);
-		show(dist1);
+		LCD_String(dist1);
 		cmd(0xc0);
-		show(dist2);
+		LCD_String(dist2);
 
       if (angle_write == 180)
 				angle_inc = 0;
@@ -105,10 +105,14 @@ void main() {
 
 	}
 }
+void LCD_String(unsigned char *str) {
+    int i;
+    for (i = 0; str[i]; i++)
+        dat(str[i]);
+}
 
 
 void lcd_delay() {
-	TMOD = 0x01;
 	TH0 = 0xdb;
 	TL0 = 0xFF;
 	TR0 = 1;
@@ -144,11 +148,6 @@ void dat(unsigned char y) {
 	EN = 0;
 }
 
-void show(unsigned char *s) {
-	while (*s) {
-		dat(*s++);
-	}
-}
 
 void trigdelay() {
 
