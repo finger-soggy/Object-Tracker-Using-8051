@@ -40,12 +40,11 @@ void delay(unsigned int);
 
 
 void main() {
-  EA = 1;
-  ET0 = 1;
-  ET1 = 1;
 	trig1 = trig2 = echo1 = echo2 = RS = RW = EN = servo = 0;
 	angle_inc = 1;
 	TMOD = 0x01;
+	TR0 = 0;
+	TF0 = 0;
 	lcd_init();
 	while (1) {
 
@@ -56,9 +55,9 @@ void main() {
 			angle_write--;
 		}
 
-		for (i=0; i<3; i++) {
-      rotate(angle_write);
-		}
+	
+    rotate(angle_write);
+		
 
 		sendtriggerpulse();
 		while (!echo1);
@@ -69,10 +68,10 @@ void main() {
 		cycle1 = TL0 | (TH0 << 8);
 		sendtriggerpulse2();
 		while (!echo2);
-		TR1 = 1;
+		TR0 = 1;
 		while (echo2 && !TF0);
-        TR1 = 0;
-        TF1 = 0;
+    TR0 = 0;
+    TF0 = 0;
 
 
     cycle2 = TL0 | (TH0 << 8);
@@ -152,9 +151,9 @@ void dat(unsigned char y) {
 void trigdelay() {
 
     TH0 = 0xff;
-    TL0 = 0xf6;
+    TL0 = 0xf5;
     TR0 = 1;
-    while(TF0 == 0);
+    while(!TF0);
     TR0 = 0;
     TF0 = 0;
 
