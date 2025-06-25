@@ -22,7 +22,7 @@ sbit EN = P3^4;
 float distance1, duration1, distance2, duration2;		                        //Ultrasonic sensors parameters
 unsigned int cycle1, cycle2;										    		//Ultrasonic sensors parameters
 unsigned int ON_Period, OFF_Period;  							               	//Servo Motor Parameters
-unsigned char angle_write, i, angle_inc;						                //Servo Motor Parameters
+char angle_write, i, angle_inc;						                //Servo Motor Parameters
 code unsigned char dist1[20], dist2[20];
 void trigdelay();																//Ultrasonic trigger pulse delay
 
