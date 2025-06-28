@@ -160,10 +160,10 @@ void main() {
 		angle_inc = 1;
     while (1) {
 				if (angle_inc) {
-					angle++;
+					angle = angle++;
 				}
 				else {
-					angle--;
+					angle = angle--;
 				}
 				// Now check sensor 1
         distance1 = measure_distance1();
@@ -173,17 +173,15 @@ void main() {
         if (distance1 > 2 && distance1 < 20) {
             // Sensor 1 detected object ? rotate to 180 degree position
             angle_inc = 1;
-            rotate(angle);
             
 				}
         else if (distance2 > 2 && distance2 < 20) {
             // Sensor 2 detected object ? rotate to 0 degree position
             angle_inc = 0;
-            rotate(angle);	
-
+          
         }
             
-         
+        rotate(angle);	
 				LCD_Command(0x01);
 				delay(250);
 				sprintf(buf, "Dist1: %.0f cm", distance1);
@@ -192,5 +190,11 @@ void main() {
         LCD_String_xy(1, 0, buf);
         delay(100);
 				
+				if (angle == 180) {
+					angle_inc = 0;
+				}
+				else if (angle == 0) {
+					angle_inc = 1;
+				}
     }
 }
