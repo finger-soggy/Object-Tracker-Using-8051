@@ -28,7 +28,6 @@ float distance1, distance2;
 char buf[17];
 unsigned char angle = 0;
 bit angle_inc;
-bit sweep_dir = 1;  // 1 = forward, 0 = backward
 
 // ================== Delay Functions ==================
 void delay(unsigned int count) {
