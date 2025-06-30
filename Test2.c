@@ -1,6 +1,7 @@
 #include <reg51.h>
 #include <stdio.h>
 #include <math.h>
+#include <intrins.h>
 
 sfr lcd_data_port = 0xA0;  // P2 = LCD data
 
