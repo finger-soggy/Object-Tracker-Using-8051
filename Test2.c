@@ -180,8 +180,12 @@ void main() {
       angle_inc = 0;
           
     }
+		
+		delay(50);
             
     rotate(angle);	
+		
+		delay(100);
 		LCD_Command(0x01);
 		delay(250);
 		sprintf(buf, "Dist1: %.2f cm", distance1);
