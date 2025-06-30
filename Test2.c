@@ -153,52 +153,50 @@ float measure_distance2() {
 
 // ================== Main Program ==================
 void main() {
-	LCD_Init();
+  LCD_Init();
   init_timer();
   servo = 0;
-	angle = 0;
-	angle_inc = 1;
+  angle = 0;
+  angle_inc = 1;
   while (1) {
-		if (angle_inc) {
-			angle = angle + 2;
-		}
-		else {
-			angle = angle - 2;
-		}
+	if (angle_inc) {
+		angle = angle + 2;
+	}
+	else {
+		angle = angle - 2;
+	}
 		// Now check sensor 1
-    distance1 = measure_distance1();
+   	distance1 = measure_distance1();
 		// Now check sensor 2
-		distance2 = measure_distance2();
+	distance2 = measure_distance2();
 				
-    if (distance1 > 2 && distance1 < 20) {
+   	if (distance1 > 2 && distance1 < 20) {
         // Sensor 1 detected object ? rotate to 180 degree position
-			angle_inc = 1;
-            
-		}
-    else if (distance2 > 2 && distance2 < 20) {
+		angle_inc = 1;
+        }
+    	else if (distance2 > 2 && distance2 < 20) {
         // Sensor 2 detected object ? rotate to 0 degree position
-      angle_inc = 0;
-          
-    }
+      		angle_inc = 0;
+    	}
 		
-		delay(50);
+	delay(50);
             
-    rotate(angle);	
+    	rotate(angle);	
 		
-		delay(100);
-		LCD_Command(0x01);
-		delay(250);
-		sprintf(buf, "Dist1: %.2f cm", distance1);
-		LCD_String_xy(0, 0, buf);
-		sprintf(buf, "Dist2: %.2f cm", distance2);
-    LCD_String_xy(1, 0, buf);
-    delay(100);
+	delay(100);
+	LCD_Command(0x01);
+	delay(250);
+	sprintf(buf, "Dist1: %.2f cm", distance1);
+	LCD_String_xy(0, 0, buf);
+	sprintf(buf, "Dist2: %.2f cm", distance2);
+   	 LCD_String_xy(1, 0, buf);
+   	 delay(100);
 				
-		if (angle == 180) {
-			angle_inc = 0;
-		}
-		else if (angle == 0) {
-			angle_inc = 1;
-		}
+	if (angle == 180) {
+		angle_inc = 0;
+	}
+	else if (angle == 0) {
+		angle_inc = 1;
+	}
   }
 }
