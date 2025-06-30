@@ -184,9 +184,8 @@ void main() {
             
     	rotate(angle);	
 		
-	delay(100);
+	delay(50);
 	LCD_Command(0x01);
-	delay(250);
 	sprintf(buf, "Dist1: %.2f cm", distance1);
 	LCD_String_xy(0, 0, buf);
 	sprintf(buf, "Dist2: %.2f cm", distance2);
