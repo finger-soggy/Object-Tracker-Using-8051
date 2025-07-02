@@ -169,14 +169,17 @@ void main() {
 		// Now check sensor 1
     distance1 = measure_distance1();
 		// Now check sensor 2
-		distance2 = measure_distance2();
+		
 				
     if (distance1 > 2 && distance1 < 20) {
         // Sensor 1 detected object ? rotate to 180 degree position
 			angle_inc = 0;
             
 		}
-    else if (distance2 > 2 && distance2 < 20) {
+		
+		distance2 = measure_distance2();
+		
+    if (distance2 > 2 && distance2 < 20) {
         // Sensor 2 detected object ? rotate to 0 degree position
       angle_inc = 1;
           
