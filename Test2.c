@@ -1,9 +1,12 @@
 #include <reg51.h>
 #include <stdio.h>
 #include <math.h>
-#include <intrins.h>
+#define PWM_PERIOD 18433
+#define ONE_MS 922
+#define SOUND_VELOCITY 34300
+#define CLOCK_PERIOD_US 1.085e-6
 
-sfr lcd_data_port = 0xA0;  // P2 = LCD data
+sfr lcd_data_port = 0xA0;  // P2 = LCD_data
 
 sbit rs = P3^2;
 sbit rw = P3^3;
@@ -19,10 +22,7 @@ sbit echo1 = P1^2;
 sbit trig2 = P1^3;
 sbit echo2 = P1^4;
 
-#define PWM_PERIOD 18433
-#define ONE_MS 922
-#define SOUND_VELOCITY 34300
-#define CLOCK_PERIOD_US 1.085e-6
+
 
 unsigned int ON_Period, OFF_Period;
 float distance1, distance2;
@@ -154,49 +154,50 @@ float measure_distance2() {
 
 // ================== Main Program ==================
 void main() {
-  LCD_Init();
+	LCD_Init();
   init_timer();
   servo = 0;
-  angle = 0;
-  angle_inc = 1;
+	angle = 0;
+	angle_inc = 1;
   while (1) {
-	if (angle_inc) {
-		angle = angle + 2;
-	}
-	else {
-		angle = angle - 2;
-	}
+		if (angle_inc) {
+			angle = angle + 10;
+		}
+		else {
+			angle = angle - 10;
+		}
 		// Now check sensor 1
-   	distance1 = measure_distance1();
+    distance1 = measure_distance1();
 		// Now check sensor 2
-	distance2 = measure_distance2();
+		distance2 = measure_distance2();
 				
-   	if (distance1 > 2 && distance1 < 20) {
+    if (distance1 > 2 && distance1 < 20) {
         // Sensor 1 detected object ? rotate to 180 degree position
-		angle_inc = 1;
-        }
-    	else if (distance2 > 2 && distance2 < 20) {
-        // Sensor 2 detected object ? rotate to 0 degree position
-      		angle_inc = 0;
-    	}
-		
-	delay(50);
+			angle_inc = 0;
             
-    	rotate(angle);	
+		}
+    else if (distance2 > 2 && distance2 < 20) {
+        // Sensor 2 detected object ? rotate to 0 degree position
+      angle_inc = 1;
+          
+    }
 		
-	delay(50);
-	LCD_Command(0x01);
-	sprintf(buf, "Dist1: %.2f cm", distance1);
-	LCD_String_xy(0, 0, buf);
-	sprintf(buf, "Dist2: %.2f cm", distance2);
-   	 LCD_String_xy(1, 0, buf);
-   	 delay(100);
+		delay(20);
+            
+    rotate(angle);	
+	
+		LCD_Command(0x01);
+		delay(25);
+		sprintf(buf, "Dist1: %.2f cm", distance1);
+		LCD_String_xy(0, 0, buf);
+		sprintf(buf, "Dist2: %.2f cm", distance2);
+    LCD_String_xy(1, 0, buf);
 				
-	if (angle == 180) {
-		angle_inc = 0;
-	}
-	else if (angle == 0) {
-		angle_inc = 1;
-	}
+		if (angle == 180) {
+			angle_inc = 0;
+		}
+		else if (angle == 0) {
+			angle_inc = 1;
+		}
   }
 }
