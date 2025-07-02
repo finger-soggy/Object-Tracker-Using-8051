@@ -13,6 +13,7 @@ sbit rw = P3^3;
 sbit en = P3^4;
 
 sbit servo = P3^6;           // Servo motor control
+sbit led = P1^0;
 
 // Ultrasonic Sensor 1 (Scanner)
 sbit trig1 = P1^1;
@@ -28,6 +29,8 @@ float distance1, distance2;
 char buf[17];
 unsigned int angle = 0;
 bit angle_inc;
+bit detector1;
+bit detector2;
 
 // ================== Serial ==================
 void serial_init() {
@@ -172,12 +175,16 @@ float measure_distance2() {
     return distance;
 }
 
+
+
+
 // ================== Main Program ==================
 void main() {
 	LCD_Init();
   init_timer();
   servo = 0;
 	angle = 0;
+	led = 0;
 	angle_inc = 1;
 	
 	serial_init();
@@ -197,20 +204,45 @@ void main() {
     distance1 = measure_distance1();
 		// Now check sensor 2
 		
-				
+			if(distance1>=100){
+			distance1=99.99;
+		} 
+			
     if (distance1 > 2 && distance1 < 20) {
         // Sensor 1 detected object ? rotate to 180 degree position
 			angle_inc = 0;
+			detector1=1;
+			
             
+		}
+		else{
+			detector1=0;
 		}
 		
 		distance2 = measure_distance2();
 		
-    if (distance2 > 2 && distance2 < 20) {
+		if(distance2>=100){
+			distance2=99.99;
+		}
+		
+   if (distance2 > 2 && distance2 < 20) {
         // Sensor 2 detected object ? rotate to 0 degree position
       angle_inc = 1;
+			detector2=1;
           
     }
+		
+		else{
+			detector2=0;
+		}
+		
+		if(detector1==1|| detector2==1)
+		{led=1;
+		}
+		
+		else{
+			led=0;
+		}
 		
 		delay(20);
             
@@ -221,9 +253,9 @@ void main() {
 	
 		
 		delay(25);
-		sprintf(buf, "%.2f cm  ", distance1);
+		sprintf(buf, "%.2f cm   ", distance1);
 		LCD_String_xy(0, 6, buf);
-		sprintf(buf, "%.2f cm  ", distance2);
+		sprintf(buf, "%.2f cm   ", distance2);
     LCD_String_xy(1, 6, buf);
 				
 		if (angle == 180) {
@@ -232,5 +264,6 @@ void main() {
 		else if (angle == 0) {
 			angle_inc = 1;
 		}
+		delay(150);
   }
 }
