@@ -247,8 +247,14 @@ void main() {
 		delay(20);
             
     rotate(angle);	
+
+	  if (detector2) {
+		sprintf(buf, "%d,%d.", angle, (int)distance2);
+	  }
+	  else {
+		sprintf(buf, "%d,%d", angle, (int)distance1);
+	  }
 		
-		sprintf(buf, "%d,%d.", angle, (int)distance1);
     serial_send_string(buf);
 	
 		
